@@ -15,5 +15,5 @@ def test_divide():
     assert calculator.divide(6,2)== 3
 
 def test_divide_by_zero():
-    with pytest(ValueError):
-     calculator.divide(6,0)
+    with pytest.raises(ZeroDivisionError):
+        calculator.divide(6, 0)
