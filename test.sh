@@ -1,4 +1,1 @@
-echo " sjhufujfsjsunsduhsuijsdl"
-echo "this is test file" > test.text
-ls -l > list.txt
-
+ new lineat Sat, Jun  7, 2025  2:40:35 PM
