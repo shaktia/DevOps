@@ -4,3 +4,4 @@ ls -l > list.txt
 
 echo " new line: $(date)"
 echo " after CICD" >> test.txt
+echo " last check" >> test.txt
