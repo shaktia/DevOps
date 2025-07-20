@@ -1,6 +1,0 @@
-my git file practice
- next line
-features branch update
-testing master update
-testing on branch
-final update
