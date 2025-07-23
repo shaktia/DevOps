@@ -40,7 +40,7 @@ pipeline{
         stage('archive'){
             steps{
                 echo 'archiving artifact'
-                archiveArtifacts artifact: "$Build_Dir/output.txt" , fingerprint: true
+                archiveArtifacts artifacts: "$Build_Dir/output.txt" , fingerprint: true
 
             }
         }
