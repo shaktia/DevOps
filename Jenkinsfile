@@ -1,40 +1,58 @@
 pipeline{
     agent any
 
+    environment{
+        Build_Dir="Build"
+    }
+
     stages{
         stage('clone'){
             steps{
-                echo "cloning"
+                echo 'cloning'
                 git 'https://github.com/shaktia/DevOps.git'
             }
         }
 
         stage('build'){
             steps{
-                echo 'building'
-            
+                sh '''
+                mkdir -p $Build_Dir
+                echo 'this is a build artifact' > $Build_Dir/output.txt
+
+                '''
             }
         }
 
         stage('test'){
             steps{
-                echo 'testing'
+                echo 'running test'
+                sh '''
+                if grep -q "artifact" $Build_Dir/output.txt ;then
+                 echo 'test pass'
+                else
+                 echo 'tst fails'
+                fi
+
+                '''
             }
         }
 
-        stage('deploying'){
+        stage('archive'){
             steps{
-                echo "deploying"
+                echo 'archiving artifact'
+                archiveArtifacts artifact: "$Build_Dir/output.txt" , fingerprint: true
+
             }
         }
-        
-        stage('Finish'){
-            steps{
-                echo "finish"
-            }
+    }
+
+    post{
+        success{
+            echo 'Build comleted successfully'
         }
 
-
-    
+        failure{
+            echo 'Build failed'
+        }
     }
 }
