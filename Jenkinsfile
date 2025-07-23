@@ -17,7 +17,7 @@ pipeline{
             steps{
                 sh '''
                 mkdir -p $Build_Dir
-                echo 'this is a build artifact' > $Build_Dir/output.txt
+                echo 'this is a build artifact' > $Build_Dir/output.zip
 
                 '''
             }
@@ -27,7 +27,7 @@ pipeline{
             steps{
                 echo 'running test'
                 sh '''
-                if grep -q "artifact" $Build_Dir/output.txt ;then
+                if grep -q "artifact" $Build_Dir/output.zip ;then
                  echo 'test pass'
                 else
                  echo 'tst fails'
@@ -40,7 +40,7 @@ pipeline{
         stage('archive'){
             steps{
                 echo 'archiving artifact'
-                archiveArtifacts artifacts: "$Build_Dir/output.txt" , fingerprint: true
+                archiveArtifacts artifacts: "$Build_Dir/output.zip" , fingerprint: true
 
             }
         }
