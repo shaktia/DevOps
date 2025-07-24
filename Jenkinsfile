@@ -3,7 +3,7 @@ pipeline{
 
     environent{
         IMAGE_NAME = "shaktia04/demo"
-        BUILD_TAG = "$(BUILD_NUMBER)"
+        BUILD_TAG = "${BUILD_NUMBER}"
     }
 
     stages{
