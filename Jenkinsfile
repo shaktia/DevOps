@@ -1,58 +1,26 @@
 pipeline{
     agent any
 
-    environment{
-        Build_Dir="Build"
+    environent{
+        IMAGE_NAME = "shaktia04/demo"
+        BUILD_TAG = "$(BUILD_NUMBER)"
     }
 
     stages{
         stage('clone'){
             steps{
-                echo 'cloning'
                 git 'https://github.com/shaktia/DevOps.git'
             }
         }
 
-        stage('build'){
+        stage('docker build'){
             steps{
-                sh '''
-                mkdir -p $Build_Dir
-                echo 'this is a build artifact' > $Build_Dir/output.zip
-
-                '''
+                script{
+                    echo "building docker image"
+                    sh docker build -t $IMAGE_NAME:$BUILD_TAG .
+                }
             }
         }
-
-        stage('test'){
-            steps{
-                echo 'running test'
-                sh '''
-                if grep -q "artifact" $Build_Dir/output.zip ;then
-                 echo 'test pass'
-                else
-                 echo 'tst fails'
-                fi
-
-                '''
-            }
-        }
-
-        stage('archive'){
-            steps{
-                echo 'archiving artifact'
-                archiveArtifacts artifacts: "$Build_Dir/output.zip" , fingerprint: true
-
-            }
-        }
-    }
-
-    post{
-        success{
-            echo 'Build comleted successfully'
-        }
-
-        failure{
-            echo 'Build failed'
-        }
+        
     }
 }
