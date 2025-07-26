@@ -5,6 +5,8 @@ pipeline {
         IMAGE_NAME = "shaktia04/demo"
         BUILD_TAG = "${BUILD_NUMBER}"
         CONTAINER_NAME = "jenkins-deploy-demo"
+        REMOTE_HOST = "ec2-16-170-204-51.eu-north-1.compute.amazonaws.com"
+
     }
 
     stages {
@@ -49,6 +51,21 @@ pipeline {
                 }
             }
         }
+
+        stage('Remote Deploy on EC2') {
+            steps {
+                sshagent(['ec2-ssh-key']) {
+                    sh """
+                    ssh -o StrictHostKeyChecking=no ubuntu@$REMOTE_HOST '
+                      docker rm -f $CONTAINER_NAME || true
+                      docker pull $IMAGE_NAME:$BUILD_TAG
+                      docker run -d --name $CONTAINER_NAME $IMAGE_NAME:$BUILD_TAG
+                    '
+                    """
+                }
+            }
+        }
+    }
     }
 
     post {
