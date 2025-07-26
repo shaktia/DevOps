@@ -21,5 +21,26 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Push (Optional)') {
+            when {
+                expression { return env.DOCKER_PUSH == 'true' }
+            }
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                      echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                      docker push $IMAGE_NAME:$BUILD_TAG
+                    '''
+                }
+            }
+        }
     }
-}
+
+    }
+    post{
+        sucess{
+            echo "Docker build completed : $IMAGE_NAME:$BUILD_TAG"
+        }
+    }
+
