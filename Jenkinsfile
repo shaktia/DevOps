@@ -6,7 +6,6 @@ pipeline {
         BUILD_TAG = "${BUILD_NUMBER}"
         CONTAINER_NAME = "jenkins-deploy-demo"
         REMOTE_HOST = "ec2-16-170-204-51.eu-north-1.compute.amazonaws.com"
-
     }
 
     stages {
@@ -43,7 +42,6 @@ pipeline {
             steps {
                 echo '🚀 Deploying Docker Container...'
                 script {
-                    // Stop and remove existing container (if running)
                     sh """
                         docker ps -a --format '{{.Names}}' | grep -w $CONTAINER_NAME && docker rm -f $CONTAINER_NAME || echo 'No existing container'
                         docker run -d --name $CONTAINER_NAME $IMAGE_NAME:$BUILD_TAG tail -f /dev/null
@@ -66,14 +64,13 @@ pipeline {
             }
         }
     }
-    }
 
     post {
         success {
-            echo "✅ Docker build completed: $IMAGE_NAME:$BUILD_TAG"
+            echo "✅ Docker build completed and container deplyed: ${IMAGE_NAME}:${BUILD_TAG}"
         }
         failure {
-            echo "❌ Docker build failed!"
+            echo "❌ Docker build & deployment failed!"
         }
     }
-
+}
