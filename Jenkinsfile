@@ -35,6 +35,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy Container') {
+            steps {
+                echo '🚀 Deploying Docker Container...'
+                script {
+                    // Stop and remove existing container (if running)
+                    sh """
+                        docker ps -a --format '{{.Names}}' | grep -w $CONTAINER_NAME && docker rm -f $CONTAINER_NAME || echo 'No existing container'
+                        docker run -d --name $CONTAINER_NAME $IMAGE_NAME:$BUILD_TAG
+                    """
+                }
+            }
+        }
     }
 
     post {
