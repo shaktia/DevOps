@@ -37,10 +37,12 @@ pipeline {
         }
     }
 
-    }
-    post{
-        sucess{
-            echo "Docker build completed : $IMAGE_NAME:$BUILD_TAG"
+    post {
+        success {
+            echo "✅ Docker build completed: $IMAGE_NAME:$BUILD_TAG"
+        }
+        failure {
+            echo "❌ Docker build failed!"
         }
     }
-
+}
